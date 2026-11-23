@@ -1,0 +1,149 @@
+---
+import { createClient } from "../lib/prismicio";
+
+const client = createClient();
+const obras = await client.getAllByType("obra", {
+  orderings: [{ field: "my.obra.order", direction: "asc" }],
+});
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+const obrasOpen = isActive("/obras");
+---
+
+<aside class="md:sticky md:top-0 md:flex md:h-screen md:flex-col md:gap-12 md:overflow-y-auto md:px-10 md:py-14">
+  <div
+    class="fixed inset-x-0 top-0 z-50 flex h-24 items-center justify-between bg-white px-6 md:static md:h-auto md:block md:px-0"
+  >
+    <a href="/" class="flex flex-col text-2xl font-semibold leading-snug">
+      <span>Paulina</span>
+      <span>Scheitlin</span>
+    </a>
+
+    <button
+      type="button"
+      class="flex flex-col gap-1.25 p-2 md:hidden"
+      data-collapse-trigger
+      data-mobile-nav-trigger
+      aria-expanded="false"
+      aria-controls="main-nav"
+      aria-label="Abrir menú"
+    >
+      <span class="block h-0.5 w-6 bg-black"></span>
+      <span class="block h-0.5 w-6 bg-black"></span>
+      <span class="block h-0.5 w-6 bg-black"></span>
+    </button>
+  </div>
+
+  <div
+    id="main-nav"
+    class="pointer-events-none fixed inset-x-0 top-24 z-40 h-[calc(100dvh-6rem)] -translate-y-2 overflow-y-auto bg-white px-6 py-6 opacity-0 transition-[opacity,transform] duration-300 ease-in-out md:static md:top-auto md:z-auto md:h-auto md:translate-y-0 md:overflow-visible md:p-0 md:opacity-100 md:pointer-events-auto"
+  >
+    <nav class="flex flex-col gap-4 text-sm uppercase tracking-wide">
+      <a href="/" class={`w-fit ${pathname === "/" ? "underline font-semibold" : ""}`}>Inicio</a>
+
+      <div class="flex flex-col gap-2">
+        <button
+          type="button"
+          class={`flex w-fit items-center gap-1 ${isActive("/obras") ? "underline font-semibold" : ""}`}
+          data-collapse-trigger
+          aria-expanded={obrasOpen ? "true" : "false"}
+          aria-controls="obras-submenu"
+        >
+          Obras
+          <svg
+            class="h-3 w-3 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div
+          id="obras-submenu"
+          class={`grid transition-[grid-template-rows] duration-300 ease-in-out ${obrasOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+        >
+          <ul class="flex flex-col gap-2 overflow-hidden pl-4 normal-case tracking-normal">
+            {
+              obras.map((obra) => (
+                <li>
+                  <a
+                    href={`/obras/${obra.uid}`}
+                    class={`w-fit text-xs ${pathname === `/obras/${obra.uid}` ? "underline font-semibold" : ""}`}
+                  >
+                    {obra.data.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <a href="/publicaciones" class={`w-fit ${isActive("/publicaciones") ? "underline font-semibold" : ""}`}>
+        Publicaciones
+      </a>
+      <a href="/bio" class={`w-fit ${isActive("/bio") ? "underline font-semibold" : ""}`}>Bio</a>
+      <a href="/contacto" class={`w-fit ${isActive("/contacto") ? "underline font-semibold" : ""}`}>Contacto</a>
+    </nav>
+  </div>
+</aside>
+
+<style>
+  [data-collapse-trigger] svg {
+    transition: transform 0.3s ease;
+    transform: rotate(-90deg);
+  }
+  [data-collapse-trigger][aria-expanded="true"] svg {
+    transform: rotate(0deg);
+  }
+
+  [data-collapse-trigger] span {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  [data-collapse-trigger][aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  [data-collapse-trigger][aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+  [data-collapse-trigger][aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+</style>
+
+<script>
+  const mobileNavTrigger = document.querySelector<HTMLButtonElement>("[data-mobile-nav-trigger]");
+  const mobileNavPanel = document.getElementById("main-nav");
+
+  if (mobileNavTrigger && mobileNavPanel) {
+    mobileNavTrigger.addEventListener("click", () => {
+      const isOpen = mobileNavTrigger.getAttribute("aria-expanded") === "true";
+      mobileNavTrigger.setAttribute("aria-expanded", String(!isOpen));
+      mobileNavPanel.classList.toggle("opacity-0", isOpen);
+      mobileNavPanel.classList.toggle("-translate-y-2", isOpen);
+      mobileNavPanel.classList.toggle("pointer-events-none", isOpen);
+      mobileNavPanel.classList.toggle("opacity-100", !isOpen);
+      mobileNavPanel.classList.toggle("translate-y-0", !isOpen);
+      mobileNavPanel.classList.toggle("pointer-events-auto", !isOpen);
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-collapse-trigger]:not([data-mobile-nav-trigger])").forEach(
+    (trigger) => {
+      const panel = document.getElementById(trigger.getAttribute("aria-controls") ?? "");
+      if (!panel) return;
+
+      trigger.addEventListener("click", () => {
+        const isOpen = trigger.getAttribute("aria-expanded") === "true";
+        trigger.setAttribute("aria-expanded", String(!isOpen));
+        panel.classList.toggle("grid-rows-[1fr]", !isOpen);
+        panel.classList.toggle("grid-rows-[0fr]", isOpen);
+      });
+    },
+  );
+</script>

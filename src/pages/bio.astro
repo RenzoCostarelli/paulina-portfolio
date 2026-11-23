@@ -1,0 +1,35 @@
+---
+import { asHTML } from "@prismicio/client";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlaceholderImage from "../components/PlaceholderImage.astro";
+import { createClient, linkResolver } from "../lib/prismicio";
+
+const client = createClient();
+const bio = await client.getSingle("bio");
+const photo = bio.data.photo;
+const intro = asHTML(bio.data.intro, { linkResolver });
+---
+
+<BaseLayout title="Bio — Paulina Scheitlin">
+  <div class="flex max-w-3xl flex-col gap-10">
+    {
+      photo.url ? (
+        <img src={photo.url} width={photo.dimensions.width} height={photo.dimensions.height} alt={photo.alt ?? "Paulina Scheitlin"} class="w-full max-w-sm" />
+      ) : (
+        <PlaceholderImage alt="Paulina Scheitlin" ratio="aspect-[4/3]" class="w-full max-w-sm" />
+      )
+    }
+    {intro && <div class="text-sm leading-relaxed" set:html={intro} />}
+    {
+      bio.data.sections.map((section: (typeof bio.data.sections)[number]) => {
+        const items = asHTML(section.items, { linkResolver });
+        return (
+          <div class="flex flex-col gap-2">
+            <h2 class="text-sm font-semibold uppercase">{section.heading}</h2>
+            {items && <div class="text-sm [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-1 [&_li]:list-none" set:html={items} />}
+          </div>
+        );
+      })
+    }
+  </div>
+</BaseLayout>

@@ -1,0 +1,11 @@
+---
+interface Props {
+  alt?: string;
+  ratio?: string;
+  class?: string;
+}
+
+const { alt = "Imagen", ratio = "aspect-[4/3]", class: className = "" } = Astro.props;
+---
+
+<div class={`bg-gray-200 ${ratio} ${className}`} role="img" aria-label={alt}></div>

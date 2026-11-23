@@ -1,0 +1,40 @@
+{
+  "Main": {
+    "photo": {
+      "type": "Image",
+      "config": {
+        "label": "Foto",
+        "constraint": {},
+        "thumbnails": []
+      }
+    },
+    "intro": {
+      "type": "StructuredText",
+      "config": {
+        "label": "Texto introductorio",
+        "multi": "paragraph,strong,em,hyperlink"
+      }
+    },
+    "sections": {
+      "type": "Group",
+      "config": {
+        "label": "Secciones",
+        "fields": {
+          "heading": {
+            "type": "Text",
+            "config": {
+              "label": "Encabezado"
+            }
+          },
+          "items": {
+            "type": "StructuredText",
+            "config": {
+              "label": "Items",
+              "multi": "list-item"
+            }
+          }
+        }
+      }
+    }
+  }
+}

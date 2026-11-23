@@ -1,0 +1,29 @@
+---
+import { asHTML } from "@prismicio/client";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ObraSlider from "../../components/ObraSlider.astro";
+import { createClient, linkResolver } from "../../lib/prismicio";
+
+export async function getStaticPaths() {
+  const client = createClient();
+  const obras = await client.getAllByType("obra");
+  return obras.map((obra) => ({
+    params: { slug: obra.uid },
+    props: { obra },
+  }));
+}
+
+const { obra } = Astro.props;
+const text = asHTML(obra.data.text, { linkResolver });
+---
+
+<BaseLayout title={`${obra.data.title} — Paulina Scheitlin`}>
+  <article class="flex flex-col gap-6 max-w-2xl mr-auto">
+    <ObraSlider images={obra.data.images} />
+    <p class="text-sm whitespace-nowrap">
+      {obra.data.title}
+      {obra.data.year && ` (${obra.data.year})`}
+    </p>
+    {text && <div class="max-w-2xl text-sm" set:html={text} />}
+  </article>
+</BaseLayout>

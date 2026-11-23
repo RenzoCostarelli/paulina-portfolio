@@ -1,0 +1,59 @@
+{
+  "Main": {
+    "uid": {
+      "type": "UID",
+      "config": {
+        "label": "UID",
+        "placeholder": "slug-de-la-obra"
+      }
+    },
+    "title": {
+      "type": "Text",
+      "config": {
+        "label": "Título"
+      }
+    },
+    "year": {
+      "type": "Text",
+      "config": {
+        "label": "Año"
+      }
+    },
+    "order": {
+      "type": "Number",
+      "config": {
+        "label": "Orden",
+        "placeholder": "Para ordenar el menú lateral"
+      }
+    },
+    "text": {
+      "type": "StructuredText",
+      "config": {
+        "label": "Texto",
+        "multi": "paragraph,strong,em,hyperlink"
+      }
+    },
+    "images": {
+      "type": "Group",
+      "config": {
+        "label": "Imágenes",
+        "fields": {
+          "image": {
+            "type": "Image",
+            "config": {
+              "label": "Imagen",
+              "constraint": {},
+              "thumbnails": []
+            }
+          },
+          "caption": {
+            "type": "Text",
+            "config": {
+              "label": "Pie de foto"
+            }
+          }
+        }
+      }
+    }
+  }
+}

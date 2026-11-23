@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { createClient } from "../lib/prismicio";
+import { asLink } from "@prismicio/client";
+
+const client = createClient();
+const publicaciones = await client.getAllByType("publicacion");
+---
+
+<BaseLayout title="Publicaciones — Paulina Scheitlin">
+  <ul class="flex flex-col gap-10">
+    {
+      publicaciones.map((pub) => {
+        const href = asLink(pub.data.link);
+        const thumbnail = pub.data.thumbnail;
+        return (
+          <li class="flex gap-6">
+            {thumbnail.url ? (
+              <img
+                src={thumbnail.url}
+                width={thumbnail.dimensions.width}
+                height={thumbnail.dimensions.height}
+                alt={thumbnail.alt ?? pub.data.title ?? ""}
+                class="aspect-square w-40 shrink-0 object-cover"
+              />
+            ) : (
+              <div class="bg-gray-200 aspect-square w-40 shrink-0" />
+            )}
+            <div class="flex flex-col gap-2 pt-2">
+              <p class="text-sm uppercase">
+                {pub.data.title} ({pub.data.subtitle})
+              </p>
+              {href && (
+                <a href={href} target="_blank" rel="noopener noreferrer" class="w-fit break-all text-sm underline">
+                  {href}
+                </a>
+              )}
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+</BaseLayout>

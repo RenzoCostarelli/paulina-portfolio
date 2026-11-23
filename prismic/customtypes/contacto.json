@@ -1,0 +1,38 @@
+{
+  "Main": {
+    "photo": {
+      "type": "Image",
+      "config": {
+        "label": "Foto",
+        "constraint": {},
+        "thumbnails": []
+      }
+    },
+    "email": {
+      "type": "Text",
+      "config": {
+        "label": "Email"
+      }
+    },
+    "phone": {
+      "type": "Text",
+      "config": {
+        "label": "Teléfono"
+      }
+    },
+    "instagram": {
+      "type": "Link",
+      "config": {
+        "label": "Instagram",
+        "select": "web"
+      }
+    },
+    "facebook": {
+      "type": "Link",
+      "config": {
+        "label": "Facebook",
+        "select": "web"
+      }
+    }
+  }
+}

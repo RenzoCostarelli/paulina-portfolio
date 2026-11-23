@@ -1,0 +1,16 @@
+{
+  "Main": {
+    "site_name": {
+      "type": "Text",
+      "config": {
+        "label": "Nombre"
+      }
+    },
+    "location": {
+      "type": "Text",
+      "config": {
+        "label": "Ubicación"
+      }
+    }
+  }
+}

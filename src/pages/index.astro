@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlaceholderImage from "../components/PlaceholderImage.astro";
+import { createClient } from "../lib/prismicio";
+
+const client = createClient();
+const inicio = await client.getSingle("inicio");
+const image = inicio.data.image;
+---
+
+<BaseLayout title="Paulina Scheitlin">
+  {image.url ? (
+    <img
+      src={image.url}
+      width={image.dimensions.width}
+      height={image.dimensions.height}
+      alt={image.alt ?? ""}
+      class="w-full w-xl max-w-[95vw]"
+    />
+  ) : (
+    <PlaceholderImage
+      alt="Foto de portada"
+      ratio="aspect-[3/4]"
+      class="w-full max-w-sm"
+    />
+  )}
+</BaseLayout>

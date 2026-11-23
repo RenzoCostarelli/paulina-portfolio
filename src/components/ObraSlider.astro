@@ -1,0 +1,95 @@
+---
+import "swiper/css";
+import "swiper/css/navigation";
+import ArrowIcon from "./ArrowIcon.astro";
+
+interface Props {
+  images: {
+    image: {
+      url: string | null;
+      dimensions: { width: number; height: number };
+      alt: string | null;
+    };
+    caption: string | null;
+  }[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="obra-swiper swiper w-full max-w-2xl">
+  <div class="swiper-wrapper">
+    {images.map(({ image, caption }) => (
+      <div class="swiper-slide flex flex-col gap-2">
+        <div class="h-[65vh] max-h-[620px] w-full">
+          {image.url ? (
+            <img
+              src={image.url}
+              width={image.dimensions.width}
+              height={image.dimensions.height}
+              alt={image.alt ?? caption ?? ""}
+              class="h-full w-full object-contain"
+            />
+          ) : (
+            <div class="h-full w-full bg-gray-200" />
+          )}
+        </div>
+        {caption && <p class="text-xs">{caption}</p>}
+      </div>
+    ))}
+  </div>
+  <div class="swiper-button-prev">
+    <ArrowIcon direction="left" />
+  </div>
+  <div class="swiper-button-next">
+    <ArrowIcon direction="right" />
+  </div>
+</div>
+
+<style>
+  .obra-swiper {
+    --swiper-theme-color: #000;
+    --swiper-navigation-size: 8px;
+  }
+
+  .obra-swiper .swiper-button-prev,
+  .obra-swiper .swiper-button-next {
+    z-index: 20;
+    font-weight: bold;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0.35rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .obra-swiper .swiper-button-prev::after,
+  .obra-swiper .swiper-button-next::after {
+    content: none;
+  }
+
+  .obra-swiper .swiper-button-prev svg,
+  .obra-swiper .swiper-button-next svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  import Swiper from "swiper";
+  import { Navigation } from "swiper/modules";
+
+  document.querySelectorAll<HTMLElement>(".obra-swiper").forEach((el) => {
+    new Swiper(el, {
+      modules: [Navigation],
+      navigation: {
+        nextEl: el.querySelector(".swiper-button-next") as HTMLElement,
+        prevEl: el.querySelector(".swiper-button-prev") as HTMLElement,
+      },
+      spaceBetween: 16,
+    });
+  });
+</script>

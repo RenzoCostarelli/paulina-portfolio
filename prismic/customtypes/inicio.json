@@ -1,0 +1,12 @@
+{
+  "Main": {
+    "image": {
+      "type": "Image",
+      "config": {
+        "label": "Foto de portada",
+        "constraint": {},
+        "thumbnails": []
+      }
+    }
+  }
+}
